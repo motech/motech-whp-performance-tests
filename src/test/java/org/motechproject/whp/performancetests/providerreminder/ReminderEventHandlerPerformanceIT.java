@@ -26,17 +26,17 @@ import static java.util.Arrays.asList;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
+import static org.motechproject.whp.common.event.EventKeys.ADHERENCE_NOT_REPORTED_EVENT_NAME;
 import static org.motechproject.whp.common.event.EventKeys.ADHERENCE_WINDOW_APPROACHING_EVENT_NAME;
 
 @RunWith(Parameterized.class)
-@ContextConfiguration(loader = SpringockitoContextLoader.class, locations ={"classpath*:/applicationProviderReminderContext.xml", "classpath:applicationContextPerformanceIT.xml"})
+@ContextConfiguration(loader = SpringockitoContextLoader.class, locations ={"classpath*:/applicationProviderReminderContext.xml"})
 public class ReminderEventHandlerPerformanceIT {
 
     private int numberOfProvidersToAdd;
     private int numberOfProviders;
 
     private TestContextManager testContextManager;
-
 
     public ReminderEventHandlerPerformanceIT(int numberOfProvidersToAdd, int numberOfProviders) {
         this.numberOfProvidersToAdd = numberOfProvidersToAdd;
@@ -66,30 +66,53 @@ public class ReminderEventHandlerPerformanceIT {
 
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
-        Object[][] data = new Object[][] { { 10, 10 }, { 100, 100 }, { 500, 500 }, { 500, 1000 } };
+        Object[][] data = new Object[][] { { 10, 10 }, { 100, 110 }, { 500, 610 }, { 1000, 1610 } };
         return asList(data);
     }
 
     @Test
     public void shouldSendReminderForProviders() throws IOException {
         Benerator.main(new String[]{String.format("createProvidersAndPatients.%s.ben.xml", numberOfProvidersToAdd)});
+        Benerator.main(new String[]{String.format("adherenceLog.%s.ben.xml", numberOfProvidersToAdd * 10)});
 
-//        providerReminderService.getActiveProviderPhoneNumbers(); //prime the couchdb indexes
+        executeAndLogWindowApproachingReminder();
+        executeAndLogAdherenceNotReportedReminder();
+    }
 
-        StopWatch stopWatch = new StopWatch(String.format("reminder-%s-providers", numberOfProviders));
+    private void executeAndLogWindowApproachingReminder() {
+        StopWatch stopWatch = new StopWatch(String.format("adherence-approaching-reminder-%s-providers", numberOfProviders));
         stopWatch.start();
 
         reminderEventHandler.adherenceWindowApproachingEvent(new MotechEvent(ADHERENCE_WINDOW_APPROACHING_EVENT_NAME));
 
         stopWatch.stop();
 
+        logRequestDetails();
+        logStopWatchSummary(stopWatch);
+    }
+
+    private void executeAndLogAdherenceNotReportedReminder() {
+        StopWatch stopWatch = new StopWatch(String.format("adherence-not-reported-reminder-%s-providers", numberOfProviders));
+        stopWatch.start();
+
+        reminderEventHandler.adherenceNotReportedEvent(new MotechEvent(ADHERENCE_NOT_REPORTED_EVENT_NAME));
+
+        stopWatch.stop();
+
+        logRequestDetails();
+        logStopWatchSummary(stopWatch);
+    }
+
+    private void logStopWatchSummary(StopWatch stopWatch) {
+        logger.info(stopWatch.shortSummary());
+    }
+
+
+    private void logRequestDetails() {
         ArgumentCaptor<String> reminderXmlCaptor = ArgumentCaptor.forClass(String.class);
         verify(httpClientService).post(eq(ivrConfiguration.getProviderReminderUrl()), reminderXmlCaptor.capture());
         String reminderXml = reminderXmlCaptor.getValue();
-
         logger.debug("Reminder Request: " + reminderXml);
-        logger.info(stopWatch.shortSummary());
-
         reset(httpClientService);
     }
 }

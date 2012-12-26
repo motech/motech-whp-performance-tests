@@ -1,16 +1,16 @@
 <setup>
     <import platforms='couchdb'/>
     <couchdb database='couchdb' name='motech-whp' environment='test'/>
-    <generate type='Provider' count='1' consumer='couchdb'>
-        <attribute name='providerId' type='string'  pattern='[a-z]{6}'/>
+    <generate type='Provider' count='10' consumer='couchdb'>
         <attribute name='primaryMobile' type='string' pattern="[1-9]{10}" unique="true"/>
         <attribute name='secondaryMobile' type='string' pattern="[1-9]{10}" unique="true"/>
         <attribute name='tertiaryMobile' type='string' pattern="[1-9]{10}" unique="true"/>
         <attribute name='district' type='string'
                    values="'Begusarai','East Champaran','Jehanabad','Khagaria','Muzaffarpur','Nalanda'"/>
         <attribute name='lastModifiedDate' type='date'/>
+        <attribute name='providerId' type='string' script="district.substring(0, 3) + '0001'" converter="ToLowerCaseConverter, UniqueStringConverter"/>
         <generate type='Patient' count='10' consumer='couchdb'>
-            <attribute name="patientId" type='string'  pattern='[a-z]{6}'/>
+            <attribute name="patientId" type='string'  script="Provider.providerId + '0001'" converter="ToLowerCaseConverter, UniqueStringConverter"/>
             <attribute name='firstName' type='string'/>
             <attribute name='lastName' type='string'/>
             <attribute name='gender' type='string' values="'M','F'"/>
@@ -41,7 +41,7 @@
                 <part name='currentTreatment' container='map' count="1">
                     <attribute name='providerId' script="{Provider.providerId}"/>
                     <attribute name='providerDistrict' script="{Provider.district}"/>
-                    <attribute name='tbId' type="string"/>
+                    <attribute name='tbId' type="string" script="{Patient.patientId}"/>
                     <attribute name='startDate' type="string" constant ="2012-04-03"/>
                     <part name='patientAddress' container='map'>
                         <attribute name='address_location' type="string"/>
