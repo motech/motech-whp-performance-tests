@@ -11,7 +11,7 @@ import org.kubek2k.springockito.annotations.SpringockitoContextLoader;
 import org.mockito.ArgumentCaptor;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.http.client.service.HttpClientService;
-import org.motechproject.whp.common.service.IvrConfiguration;
+import org.motechproject.whp.providerreminder.ivr.ProviderReminderRequestProperties;
 import org.motechproject.whp.providerreminder.service.ProviderReminderService;
 import org.motechproject.whp.providerreminder.service.ReminderEventHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,13 +21,16 @@ import org.springframework.util.StopWatch;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashMap;
 
 import static java.util.Arrays.asList;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.motechproject.whp.common.event.EventKeys.ADHERENCE_NOT_REPORTED_EVENT_NAME;
-import static org.motechproject.whp.common.event.EventKeys.ADHERENCE_WINDOW_APPROACHING_EVENT_NAME;
+import static org.motechproject.whp.common.event.EventKeys.ADHERENCE_WINDOW_COMMENCED_EVENT_NAME;
 
 @RunWith(Parameterized.class)
 @ContextConfiguration(loader = SpringockitoContextLoader.class, locations ={"classpath*:/applicationProviderReminderContext.xml"})
@@ -54,7 +57,7 @@ public class ReminderEventHandlerPerformanceIT {
     ProviderReminderService providerReminderService;
 
     @Autowired
-    IvrConfiguration ivrConfiguration;
+    ProviderReminderRequestProperties providerReminderRequestProperties;
 
     @Before
     public void setUp() throws Exception {
@@ -72,9 +75,19 @@ public class ReminderEventHandlerPerformanceIT {
 
     @Test
     public void shouldSendReminderForProviders() throws IOException {
-        Benerator.main(new String[]{String.format("createProvidersAndPatients.%s.ben.xml", numberOfProvidersToAdd)});
-        Benerator.main(new String[]{String.format("adherenceLog.%s.ben.xml", numberOfProvidersToAdd * 10)});
+        System.setProperty("provider_count", String.valueOf(numberOfProvidersToAdd));
+        Benerator.main(new String[]{"createProvidersAndPatients.ben.xml"});
 
+        System.setProperty("count", String.valueOf(numberOfProvidersToAdd * 10));
+        Benerator.main(new String[]{"adherenceLog.ben.xml"});
+
+        System.out.println("-- before indexing couchdb views ---");
+        executeReminderEvents();
+        System.out.println("-- after priming couchdb views ---");
+        executeReminderEvents();
+    }
+
+    private void executeReminderEvents() {
         executeAndLogWindowApproachingReminder();
         executeAndLogAdherenceNotReportedReminder();
     }
@@ -83,7 +96,7 @@ public class ReminderEventHandlerPerformanceIT {
         StopWatch stopWatch = new StopWatch(String.format("adherence-approaching-reminder-%s-providers", numberOfProviders));
         stopWatch.start();
 
-        reminderEventHandler.adherenceWindowApproachingEvent(new MotechEvent(ADHERENCE_WINDOW_APPROACHING_EVENT_NAME));
+        reminderEventHandler.adherenceWindowCommencedEvent(new MotechEvent(ADHERENCE_WINDOW_COMMENCED_EVENT_NAME));
 
         stopWatch.stop();
 
@@ -110,9 +123,10 @@ public class ReminderEventHandlerPerformanceIT {
 
     private void logRequestDetails() {
         ArgumentCaptor<String> reminderXmlCaptor = ArgumentCaptor.forClass(String.class);
-        verify(httpClientService).post(eq(ivrConfiguration.getProviderReminderUrl()), reminderXmlCaptor.capture());
-        String reminderXml = reminderXmlCaptor.getValue();
-        logger.debug("Reminder Request: " + reminderXml);
+        verify(httpClientService, atLeastOnce()).post(eq(providerReminderRequestProperties.getProviderReminderUrl()), reminderXmlCaptor.capture(), any(HashMap.class));
+        for(String reminderXml : reminderXmlCaptor.getAllValues()){
+            logger.debug("Reminder Request: " + reminderXml);
+        }
         reset(httpClientService);
     }
 }

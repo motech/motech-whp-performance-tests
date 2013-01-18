@@ -1,7 +1,7 @@
 <setup>
     <import platforms='couchdb'/>
     <couchdb database='couchdb' name='motech-whp' environment='test'/>
-    <generate type='Provider' count='10' consumer='couchdb'>
+    <generate type='Provider' count='{provider_count}' consumer='couchdb'>
         <attribute name='primaryMobile' type='string' pattern="[1-9]{10}" unique="true"/>
         <attribute name='secondaryMobile' type='string' pattern="[1-9]{10}" unique="true"/>
         <attribute name='tertiaryMobile' type='string' pattern="[1-9]{10}" unique="true"/>
