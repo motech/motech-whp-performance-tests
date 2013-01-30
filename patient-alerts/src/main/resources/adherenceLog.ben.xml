@@ -1,0 +1,19 @@
+<setup>
+    <import platforms='couchdb'/>
+    <couchdb database='couchdb' name='motech-tb-adherence' environment='localcouchdb'/>
+    <generate type='meta' count='{count}' consumer='couchdb'>
+        <variable name="patientId" type="long" generator="new IncrementalIdGenerator(1000)" />
+        <generate type='AdherenceLog' count='10' consumer='couchdb'>
+            <attribute name='externalId' type='string' script="'' + patientId" unique="true"/>
+            <attribute name='treatmentId' type='string' script="'' + patientId" unique="true"/>
+            <attribute name='doseDate' type='string' values="'2013-01-21','2013-01-14','2013-01-30','2013-01-01'" />
+            <attribute name='status' type="int" constant="1"/>
+
+            <variable name='district' type='string' values="'Begusarai','East Champaran','Jehanabad','Khagaria','Muzaffarpur','Nalanda'" />
+            <part name='meta' container='map' count="1">
+                <attribute name='PROVIDER_ID' type="string" script="district.substring(0, 3) + '0010'" converter="ToLowerCaseConverter, UniqueStringConverter"/>
+                <attribute name='TB_ID' type="string" pattern="[1-9]{10}"/>
+            </part>
+        </generate>
+    </generate>
+</setup>
