@@ -11,6 +11,7 @@
     <modules>
         <module>provider-reminders</module>
         <module>patient-alerts</module>
+        <module>patient-summary-reports</module>
     </modules>
 
     <properties>
