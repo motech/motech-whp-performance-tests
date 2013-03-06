@@ -16,7 +16,7 @@
 
     <properties>
         <spring.version>3.1.0.RELEASE</spring.version>
-        <motech.whp.version>0.4.1-SNAPSHOT</motech.whp.version>
+        <motech.whp.version>0.5-SNAPSHOT</motech.whp.version>
     </properties>
 
     <repositories>

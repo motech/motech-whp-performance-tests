@@ -28,9 +28,22 @@
 
         <attribute name="patient_pk" type="long" generator="new IncrementalIdGenerator(100)"/>
         <attribute name="patient_id" script="{'' + patient.patient_pk}" type="string"/>
+
+        <generate type="patient_alert" count="1" consumer="db">
+            <attribute name="alert_pk" script="{patient.patient_id}"/>
+        </generate>
+
+        <generate type="patient_address" count="1" consumer="db">
+            <attribute name="address_pk" script="{patient.patient_id}"/>
+            <attribute name="village"  type="string" constant="Village"/>
+            <attribute name="block"  type="string" constant="Block"/>
+            <attribute name="district"  type="string" constant="District"/>
+            <attribute name="state"  type="string" constant="State"/>
+            <attribute name="landmark"  type="string" constant="Landmark"/>
+        </generate>
+
         <attribute name="patient_alert_fk" script="{patient.patient_id}" type="string"/>
         <attribute name="patient_address_fk" script="{patient.patient_id}" type="string"/>
-
 
         <variable name="person" generator="org.databene.domain.person.PersonGenerator"/>
         <variable name="patient_therapy_id" type="long" generator="new IncrementalIdGenerator(1000)"/>
@@ -45,19 +58,6 @@
         <attribute name="status" type="string" constant="100"/>
         <attribute name="is_active" type="string" constant="Y"/>
 
-        <generate type="patient_alert" count="1" consumer="db">
-            <attribute name="alert_pk" script="{patient.patient_alert_fk}"/>
-        </generate>
-
-        <generate type="patient_address" count="1" consumer="db">
-            <attribute name="address_pk" script="{patient.patient_address_fk}"/>
-            <attribute name="village"  type="string" constant="Village"/>
-            <attribute name="block"  type="string" constant="Block"/>
-            <attribute name="district"  type="string" constant="District"/>
-            <attribute name="state"  type="string" constant="State"/>
-            <attribute name="landmark"  type="string" constant="Landmark"/>
-
-        </generate>
 
         <generate type="patient_therapy" count="1" consumer="db">
             <attribute name="therapy_pk" script="{patient_therapy_id}"/>
