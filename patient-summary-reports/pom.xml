@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>motech-whp-performance-tests</artifactId>
+        <groupId>motech-whp-performance-tests</groupId>
+        <version>1.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>patient-summary-reports</artifactId>
+
+
+    <dependencies>
+        <dependency>
+            <groupId>vmnaik.databene</groupId>
+            <artifactId>databene-benerator</artifactId>
+            <version>0.7.6</version>
+        </dependency>
+        <dependency>
+            <groupId>postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>9.1-901.jdbc4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.quartz-scheduler</groupId>
+            <artifactId>quartz</artifactId>
+            <version>2.1.5</version>
+        </dependency>
+        <dependency>
+            <groupId>couch4ben</groupId>
+            <artifactId>couch4ben</artifactId>
+            <version>1.0</version>
+        </dependency>
+    </dependencies>
+</project>
