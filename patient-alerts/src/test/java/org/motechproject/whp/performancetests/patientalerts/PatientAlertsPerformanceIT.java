@@ -8,10 +8,11 @@ import java.io.IOException;
 public class PatientAlertsPerformanceIT {
 
     @Test
-    public void should() throws IOException {
-        System.setProperty("provider_count", String.valueOf(1));
+    public void shouldCreateSchedules() throws IOException {
+        int count = 100;
+        System.setProperty("provider_count", String.valueOf(count));
         System.setProperty("patient_count", String.valueOf(1));
-        System.setProperty("count", String.valueOf(1));
+        System.setProperty("count", String.valueOf(count));
         Benerator.main(new String[]{"createProvidersAndPatients.ben.xml"});
         Benerator.main(new String[]{"adherenceLog.ben.xml"});
         Benerator.main(new String[]{"quartz.ben.xml"});

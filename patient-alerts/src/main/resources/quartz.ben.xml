@@ -44,12 +44,12 @@
             <attribute name="JOB_NAME"  type='string' script="qrtz_job_details.JOB_NAME"/>
             <attribute name="JOB_GROUP"  type='string' constant="patientAlerts"/>
             <attribute name="DESCRIPTION"  nullable="true"/>
-            <attribute name="NEXT_FIRE_TIME"  type='int' constant="1358610774"/>
+            <attribute name="NEXT_FIRE_TIME"  type='int' constant="1362550740000"/>
             <attribute name="PREV_FIRE_TIME"  type='int' constant="-1"/>
             <attribute name="PRIORITY"  type='int' constant="5"/>
             <attribute name="TRIGGER_STATE"  type='string' constant="WAITING"/>
             <attribute name="TRIGGER_TYPE"  type='string' constant="CRON"/>
-            <attribute name="START_TIME"  type='int' constant="1358610774"/>
+            <attribute name="START_TIME"  type='int' constant="1362550922"/>
             <attribute name="END_TIME"  type='int' constant="0"/>
             <attribute name="CALENDAR_NAME" nullable="true"/>
             <attribute name="MISFIRE_INSTR" type='int' constant="0"/>

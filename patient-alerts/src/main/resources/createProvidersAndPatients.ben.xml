@@ -8,7 +8,8 @@
         <attribute name='district' type='string'
                    values="'Begusarai','East Champaran','Jehanabad','Khagaria','Muzaffarpur','Nalanda'"/>
         <attribute name='lastModifiedDate' type='date'/>
-        <attribute name='providerId' type='string' script="Provider.district.substring(0, 3) + '0010'" converter="ToLowerCaseConverter, UniqueStringConverter"/>
+        <variable name="providerSeq" type="long" generator="new IncrementalIdGenerator(1000)" />
+        <attribute name='providerId' type='string' script="{'' + providerSeq}"/>
         <generate type='Patient' count='{patient_count}' consumer='couchdb'>
             <variable name="patientIndex" type="long" generator="new IncrementalIdGenerator(1000)" />
             <attribute name="patientId" type="string" script="'' + patientIndex" />
