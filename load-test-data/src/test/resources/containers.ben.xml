@@ -1,0 +1,31 @@
+<setup>
+    <import platforms='couchdb'/>
+    <couchdb database='couchdb' name='motech-whp' environment='test'/>
+    <generate type='Container' count='{count}' consumer='couchdb'>
+        <variable name="containerNumber" type="long" generator="new IncrementalIdGenerator(10000000000)"/>
+        <attribute name='containerId' type='string' script="{'' + containerNumber }"/>
+        <attribute name='instance' type='string' values="'PreTreatment'"/>
+        <attribute name='currentTrackingInstance' type='string' values="'PreTreatment'"/>
+        <attribute name='mappingInstance' type='string' values="'PreTreatment'"/>
+        <attribute name='providerId' type='string' pattern="[1-9]{10}"/>
+        <attribute name='district' type='string' values="'Begusarai','East Champaran','Jehanabad','Khagaria','Muzaffarpur','Nalanda'" />
+        <attribute name='creationTime' type='string' values="'2012-12-21','2012-12-14','2012-12-07','2012-12-01'" />
+        <attribute name='consultationDate' type='string' values="'2012-12-21','2012-12-14','2012-12-07','2012-12-01'" />
+        <attribute name='containerIssuedDate' type='string' values="'2012-12-21','2012-12-14','2012-12-07','2012-12-01'" />
+        <attribute name='status' type="string" values="'Open'"/>
+        <attribute name='diagnosis' type="string" values="'Positive','Negative','Pending'"/>
+        <attribute name='tbId' type="string"/>
+        <attribute name='patientId' type="string"/>
+
+        <part name='labResults' container='map' count="1">
+            <attribute name='smearTestDate1' type='string' constant = "2012-12-14"/>
+            <attribute name='smearTestDate2' type='string' constant = "2012-12-14"/>
+            <attribute name='smearTestResult1' type='string' constant = "Positive"/>
+            <attribute name='smearTestResult2' type='string' constant = "Positive"/>
+            <attribute name='cumulativeResult' type='string' constant = "Positive"/>
+            <attribute name='capturedOn' type='string' constant = "2012-12-14"/>
+            <attribute name='labName' type="string"/>
+            <attribute name='labNumber' type="string"/>
+        </part>
+    </generate>
+</setup>

@@ -13,6 +13,7 @@
         <module>patient-alerts</module>
         <module>patient-summary-reports</module>
         <module>calllog-report</module>
+        <module>load-test-data</module>
     </modules>
 
     <properties>
