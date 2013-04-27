@@ -14,6 +14,7 @@
         <module>patient-summary-reports</module>
         <module>calllog-report</module>
         <module>load-test-data</module>
+        <module>load-reporting-test-data</module>
     </modules>
 
     <properties>

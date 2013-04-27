@@ -9,7 +9,7 @@ public class PatientSummaryPerformanceIT {
     @Ignore("will load data everytime mci is run")
     @Test
     public void shouldLoadPatients() throws Exception {
-        System.setProperty("count", String.valueOf(70000));
+        System.setProperty("count", String.valueOf(100));
         Benerator.main(new String[]{"patients.ben.xml"});
     }
 
