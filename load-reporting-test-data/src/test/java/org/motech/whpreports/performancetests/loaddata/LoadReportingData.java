@@ -16,4 +16,15 @@ public class LoadReportingData {
 
         };
     }
+
+    @Test
+    public void shouldLoadAdherenceAuditLogs() throws IOException {
+        try{
+            System.setProperty("count", String.valueOf(100));
+            Benerator.main(new String[]{"createAdherenceAuditLogsForReporting.ben.xml"});
+        }catch (Exception exception){
+
+        };
+    }
+
 }
