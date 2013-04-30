@@ -1,6 +1,7 @@
 package org.motech.whpreports.performancetests.loaddata;
 
 import org.databene.benerator.main.Benerator;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -18,6 +19,8 @@ public class LoadReportingData {
         };
     }
 
+    //Moved to PatientsProvider Script
+    @Ignore
     @Test
     public void shouldLoadAdherenceData() throws IOException {
         try{
