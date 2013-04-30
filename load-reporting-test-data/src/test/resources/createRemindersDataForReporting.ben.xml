@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<setup
+        xmlns="http://databene.org/benerator/0.7.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://databene.org/benerator/0.7.0 http://databene.org/benerator-0.7.0.xsd">
+
+    <import platforms="db"/>
+
+    <comment>setting default values</comment>
+    <setting name="stage" default="development"/>
+    <setting name="database" default="whp"/>
+    <setting name="dbCatalog" default="whp"/>
+    <setting name="dbSchema" default="whp_reports"/>
+    <setting name="dbPassword" default="p@ssw0rd"/>
+    <setting name="dbBatch" default="false"/>
+    <setting name="provider_reminder_call_log_count" default="10"/>
+    <setting name="patient_alert_count" default="10"/>
+
+    <include uri="{ftl:reports.ben.properties}"/>
+
+    <database id="db" url="{dbUrl}" driver="{dbDriver}" catalog="{dbCatalog}" schema="{dbSchema}"
+              user="{dbUser}" password="{dbPassword}" batch="{dbBatch}" acceptUnknownColumnTypes="true"/>
+
+    <generate type="provider_reminder_call_log" count="{provider_reminder_call_log_count}" consumer="db">
+        <variable name="callId" type="long" generator="new IncrementalIdGenerator(100)"/>
+        <attribute name="call_id" script="{'' + callId}" type="string"/>
+        <attribute name="request_id" script="{'' + callId}" type="string"/>
+        <attribute name="mobile_number" type="string" constant="1234567891"/>
+
+        <variable name='district' type='string'
+                  values="'Begusarai','East Champaran','Jehanabad','Khagaria','Muzaffarpur','Nalanda', 'Bengaluru', 'Patna', 'Samastipur', 'Arwal'"/>
+
+        <attribute name="provider_id"
+                   source="db"
+                   selector="select provider_id from whp_reports.provider" cyclic="true"/>
+
+        <attribute name="attempt_date_time" type="date" min="2013-01-21" max="2013-05-21"/>
+        <attribute name="start_date_time" type="timestamp" min="2013-01-21 10:34:43" max="2013-05-21 10:34:43"/>
+        <attribute name="end_date_time" type="timestamp" min="2013-01-21 10:34:43" max="2013-05-21 10:34:43"/>
+
+        <attribute name="attempt" type="int" min="1" max="5"/>
+
+        <attribute name='call_answered' type="string" constant="Yes"/>
+        <attribute name='adherence_reported' type="string" values="'Y','N'"/>
+        <attribute name='reminder_type' type="string" values="'ADHERENCE_WINDOW_APPROACHING','ADHERENCE_NOT_REPORTED'"/>
+        <attribute name='disconnection_type' type="string" values="'PROVIDER_HUNGUP', 'NETWORK_ERROR', 'WGN_HUNGUP'"/>
+    </generate>
+
+    <generate type="patient_alert" count="{patient_alert_count}" consumer="db">
+        <attribute name="alert_pk" type="long" generator="new IncrementalIdGenerator(100)"/>
+
+        <attribute name="missed_doses" type="int" min="0" max="51"/>
+        <attribute name="missed_doses_severity" type="int" min="0" max="7"/>
+        <attribute name="missed_doses_as_of" type="date" min="2013-01-21" max="2013-05-21"/>
+
+        <attribute name="adherence_missing" type="int" min="0" max="51"/>
+        <attribute name="adherence_missing_severity" type="int" min="0" max="7"/>
+        <attribute name="adherence_missing_as_of" type="date" min="2013-01-21" max="2013-05-21"/>
+
+        <attribute name="not_started" type="int" min="0" max="51"/>
+        <attribute name="not_started_severity" type="int" min="0" max="7"/>
+        <attribute name="not_started_as_of" type="date" min="2013-01-21" max="2013-05-21"/>
+    </generate>
+</setup>
+
+
+

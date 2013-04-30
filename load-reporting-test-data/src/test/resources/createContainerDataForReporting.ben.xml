@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<setup
+        xmlns="http://databene.org/benerator/0.7.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://databene.org/benerator/0.7.0 http://databene.org/benerator-0.7.0.xsd">
+
+    <import platforms="db"/>
+
+    <comment>setting default values</comment>
+    <setting name="stage" default="development"/>
+    <setting name="database" default="whp"/>
+    <setting name="dbCatalog" default="whp"/>
+    <setting name="dbSchema" default="whp_reports"/>
+    <setting name="dbPassword" default="p@ssw0rd"/>
+    <setting name="dbBatch" default="false"/>
+    <setting name="container_count" default="5"/>
+    <setting name="container_call_log_count" default="5"/>
+
+    <include uri="{ftl:reports.ben.properties}"/>
+
+    <database id="db" url="{dbUrl}" driver="{dbDriver}" catalog="{dbCatalog}" schema="{dbSchema}"
+              user="{dbUser}" password="{dbPassword}" batch="{dbBatch}" acceptUnknownColumnTypes="true"/>
+
+    <generate type='sputum_tracking' count="{container_count}" consumer='db'>
+        <attribute name="sputum_tracking_id" type="long" generator="new IncrementalIdGenerator(1000)"/>
+        <variable name='district' type='string'
+                  values="'Begusarai','East Champaran','Jehanabad','Khagaria','Muzaffarpur','Nalanda', 'Bengaluru', 'Patna', 'Samastipur', 'Arwal'"/>
+        <attribute name="provider_id"
+                   source="db"
+                   selector="select provider_id from whp_reports.provider" cyclic="true"/>
+        <attribute name='provider_district' type="string" script="district"/>
+        <attribute name='container_id' type="string"/>
+        <attribute name='submitter_role' type="string" values="'PROVIDER', 'CMF_ADMIN'"/>
+        <attribute name='submitter_id' type="string"/>
+        <attribute name='registration_instance' type="string" values="'PreTreatment', 'InTreatment'"/>
+        <attribute name='channel_id' type="string" values="'IVR', 'WEB'"/>
+        <attribute name="call_id" type="string"/>
+        <attribute name='date_issued_on' type='date' min="2013-01-21" max="2013-05-21"/>
+        <attribute name='smear_test_date1' type='date' min="2013-01-21" max="2013-05-21"/>
+        <attribute name='smear_test_result1' type="string" values="'Positive', 'Negative', 'Indeterminate'"/>
+        <attribute name='smear_test_date2' type='date' min="2013-01-21" max="2013-05-21"/>
+        <attribute name='smear_test_result2' type="string" values="'Positive', 'Negative', 'Indeterminate'"/>
+        <attribute name='cumulative_result' type="string" values="'Positive', 'Negative'"/>
+        <attribute name='lab_name' type="string" constant="lab_name"/>
+        <attribute name='lab_number' type="string" constant="lab_number"/>
+        <attribute name='lab_results_captured_on' type='timestamp' min="2013-01-21 10:34:43" max="2013-05-21 10:34:43"/>
+        <attribute name='container_status' type="string" constant="Open"/>
+        <attribute name='diagnosis' type="string" values="'Positive', 'Negative', 'Pending'"/>
+        <attribute name="patient_id" type="string"/>
+        <attribute name='tb_id' type="string" pattern="[1-9]{10}"/>
+        <attribute name='consultation_date' type='date' min="2013-01-21" max="2013-05-21"/>
+        <attribute name='mapping_instance' type="string" values="'PreTreatment', 'InTreatment'"/>
+        <attribute name="given_patient_id" type="string"/>
+        <attribute name="given_patient_name" constant="givenPatientName" type="string"/>
+        <attribute name="given_patient_age" constant="99" type="int"/>
+        <attribute name="given_gender" constant="M" type="string"/>
+        <attribute name='alternate_diagnosis_code' type="string" constant="1027"/>
+        <attribute name="reason_for_closure" type="string" constant="2"/>
+        <attribute name="closure_date" type='date' min="2013-01-21" max="2013-05-21"/>
+    </generate>
+
+    <generate type="container_call_log" count="{container_call_log_count}" consumer="db">
+        <attribute name="call_log_id" type="long" generator="new IncrementalIdGenerator(1000)"/>
+        <attribute name="call_id" script="{'' + container_call_log.call_log_id}" type="string"/>
+        <attribute name="mobile_number" type="string" constant="1234567890"/>
+
+        <variable name='district' type='string'
+                  values="'Begusarai','East Champaran','Jehanabad','Khagaria','Muzaffarpur','Nalanda', 'Bengaluru', 'Patna', 'Samastipur', 'Arwal'"/>
+
+        <attribute name="provider_id"
+                   source="db"
+                   selector="select provider_id from whp_reports.provider" cyclic="true"/>
+
+        <attribute name="start_date_time" type="timestamp" min="2013-01-21 10:34:43" max="2013-05-21 10:34:43"/>
+        <attribute name="end_date_time" type="timestamp" min="2013-01-21 10:34:43" max="2013-05-21 10:34:43"/>
+        <attribute name="duration" type="int" min="0" max="15"/>
+        <attribute name='disconnection_type' type="string" values="'MISSED_CALL', 'NETWORK_ERROR', 'WGN_HUNGUP'"/>
+
+        <attribute name="provider_verification_time" type="timestamp" min="2013-01-21 10:34:43" max="2013-05-21 10:34:43"/>
+        <attribute name='valid_container_verification_attempts' type='int' min="0" max="5"/>
+        <attribute name='invalid_container_verification_attempts' type='int' min="0" max="5"/>
+    </generate>
+
+</setup>
+
+
+
