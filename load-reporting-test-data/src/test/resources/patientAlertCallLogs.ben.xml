@@ -13,26 +13,26 @@
     <setting name="dbSchema" default="whp_reports"/>
     <setting name="dbPassword" default="p@ssw0rd"/>
     <setting name="dbBatch" default="false"/>
-    <setting name="count" default="5"/>
+    <setting name="call_log_count" default="10"/>
 
     <include uri="{ftl:reports.ben.properties}"/>
 
     <database id="db" url="{dbUrl}" driver="{dbDriver}" catalog="{dbCatalog}" schema="{dbSchema}"
-              user="{dbUser}" password="{dbPassword}" batch="{dbBatch}" acceptUnknownColumnTypes = "true"/>
+              user="{dbUser}" password="{dbPassword}" batch="{dbBatch}" acceptUnknownColumnTypes="true"/>
 
-    <generate type="call_log" count="{count}" consumer="db">
+    <generate type='call_log' count='{call_log_count}' consumer='db'>
         <attribute name="call_log_id" type="long" generator="new IncrementalIdGenerator(100)"/>
-        <attribute name="call_id" script="{'' + call_log.call_log_id}" type="string"/>
+        <attribute name="call_id"  type="string" script="{'' + call_log.call_log_id}"/>
         <attribute name="phone_number" type="string" constant="1234567890"/>
-        <attribute name="start_date_time" type="date" constant="2012-12-25"/>
-        <attribute name="end_date_time" type="date" constant="2012-12-25"/>
+        <attribute name="start_date_time" type="timestamp" constant="2013-03-21 10:34:43" />
+        <attribute name="end_date_time" type="timestamp" constant="2013-03-21 11:34:43"/>
 
         <attribute name="disposition" type="string" constant="ANSWERED"/>
         <attribute name="error_message" type="string" constant="No Error"/>
         <attribute name="call_type" type="string" constant="patientAlerts"/>
         <attribute name="request_id" type="string" constant="request_id"/>
-        <attribute name="attempt_date_time" type="date" constant="2012-12-25"/>
-        <attribute name="attempt_number" type="int" constant="1"/>
+        <attribute name="attempt_date_time" type="timestamp" constant="2013-03-21 10:34:43" />
+        <attribute name="attempt_number" type="string" constant="1"/>
     </generate>
-    <execute target="db">update whp_reports.call_log set custom_data= '"patientId"=>"patientWithAlert4"', call_events= '"dtmf_input"=>"1"'</execute>.
+    <execute target="db">update whp_reports.call_log set custom_data= '"patientId"=>"patientWithAlert4"', call_events= '"dtmf_input"=>"1"'</execute>
 </setup>

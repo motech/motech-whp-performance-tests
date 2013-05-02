@@ -8,7 +8,7 @@ import java.io.IOException;
 public class LoadPatientsAndAdherenceLogs {
     @Test
     public void shouldLoadPatientsAndProviders() throws IOException {
-        System.setProperty("provider_count", String.valueOf(16000));
+        System.setProperty("provider_count", String.valueOf(10000));
         Benerator.main(new String[]{"createProvidersAndPatients.ben.xml"});
     }
 

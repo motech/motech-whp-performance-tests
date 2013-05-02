@@ -14,7 +14,6 @@
     <setting name="dbPassword" default="p@ssw0rd"/>
     <setting name="dbBatch" default="false"/>
     <setting name="provider_reminder_call_log_count" default="10"/>
-    <setting name="patient_alert_count" default="10"/>
 
     <include uri="{ftl:reports.ben.properties}"/>
 
@@ -46,21 +45,6 @@
         <attribute name='disconnection_type' type="string" values="'PROVIDER_HUNGUP', 'NETWORK_ERROR', 'WGN_HUNGUP'"/>
     </generate>
 
-    <generate type="patient_alert" count="{patient_alert_count}" consumer="db">
-        <attribute name="alert_pk" type="long" generator="new IncrementalIdGenerator(100)"/>
-
-        <attribute name="missed_doses" type="int" min="0" max="51"/>
-        <attribute name="missed_doses_severity" type="int" min="0" max="7"/>
-        <attribute name="missed_doses_as_of" type="date" min="2013-01-21" max="2013-05-21"/>
-
-        <attribute name="adherence_missing" type="int" min="0" max="51"/>
-        <attribute name="adherence_missing_severity" type="int" min="0" max="7"/>
-        <attribute name="adherence_missing_as_of" type="date" min="2013-01-21" max="2013-05-21"/>
-
-        <attribute name="not_started" type="int" min="0" max="51"/>
-        <attribute name="not_started_severity" type="int" min="0" max="7"/>
-        <attribute name="not_started_as_of" type="date" min="2013-01-21" max="2013-05-21"/>
-    </generate>
 </setup>
 
 
