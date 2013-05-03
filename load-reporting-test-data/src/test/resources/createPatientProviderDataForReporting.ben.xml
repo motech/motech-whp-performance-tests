@@ -44,7 +44,7 @@
                 <attribute name="address_pk" script="{patient.patient_id}"/>
                 <attribute name="village"  type="string" constant="Village"/>
                 <attribute name="block"  type="string" constant="Block"/>
-                <attribute name="district"  type="string" constant="District"/>
+                <attribute name="district"  type="string" script="provider.district"/>
                 <attribute name="state"  type="string" constant="State"/>
                 <attribute name="landmark"  type="string" constant="Landmark"/>
             </generate>
@@ -71,8 +71,8 @@
                 <attribute name="is_current_therapy" type="string" constant="Y"/>
                 <attribute name="patient_age" type="int" constant="66"/>
                 <attribute name="creation_date" type="date" constant="2012-12-25"/>
-                <attribute name="start_date" type="date" constant="2012-12-25"/>
-                <attribute name="close_date" type="date" constant="2012-12-25"/>
+                <attribute name="start_date" type="date" min="2013-02-21" max="2013-04-21"/>
+                <attribute name="close_date" type="date" min="2013-02-21" max="2013-05-21"/>
                 <attribute name="status" type="string" constant="Status"/>
                 <attribute name="treatment_category" type="string" constant="Category"/>
                 <attribute name="disease_class" type="string" constant="Category"/>
@@ -101,11 +101,11 @@
                     <variable name="patient_treatment_id" type="long" generator="new IncrementalIdGenerator(1000)"/>
                     <attribute name="treatment_pk" script="{patient_treatment_id}"/>
                     <attribute name="therapy_fk" script="{patient_therapy.therapy_pk}"/>
-                    <attribute name="provider_id" type='string' constant="provider1"/>
-                    <attribute name="provider_district" type='string' constant="district1"/>
+                    <attribute name="provider_id" type='string' script="provider.provider_id"/>
+                    <attribute name="provider_district" type='string' script="provider.district"/>
                     <attribute name="tb_id" type='string' script="{'' + patient_treatment.treatment_pk}"/>
-                    <attribute name="start_date" type="date" constant="2012-12-25"/>
-                    <attribute name="end_date" type="date" constant="2012-12-25"/>
+                    <attribute name="start_date" type="date" min="2013-02-21" max="2013-05-21"/>
+                    <attribute name="end_date" type="date" min="2013-02-21" max="2013-05-21"/>
                     <attribute name="treatment_outcome" type='string' constant="outcome"/>
                     <attribute name="patient_type" type='string' constant="type"/>
                     <attribute name="tb_registration_no" type='string' script="{'' + patient_treatment.treatment_pk}"/>
