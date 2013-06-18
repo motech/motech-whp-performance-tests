@@ -45,6 +45,10 @@
                 <updatePolicy>daily</updatePolicy>
             </snapshots>
         </repository>
+        <repository>
+            <id>vmnaik-releases</id>
+            <url>https://github.com/vishalmanohar/mvn-repo/raw/master/releases</url>
+        </repository>
     </repositories>
 
 
